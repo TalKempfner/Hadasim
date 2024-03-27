@@ -1,0 +1,126 @@
+﻿@model CoronaManagementSystem.Models.MemberViewModel
+
+@{
+    ViewData["Title"] = "הוספת חבר";
+}
+
+<h1>הוספה</h1>
+
+<h4>חבר קופת חולים</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="FirstName" class="control-label"></label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName" class="control-label"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Id" class="control-label"></label>
+                <input asp-for="Id" class="form-control" />
+                <span asp-validation-for="Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="City" class="control-label"></label>
+                <input asp-for="City" class="form-control" />
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StreetName" class="control-label"></label>
+                <input asp-for="StreetName" class="form-control" />
+                <span asp-validation-for="StreetName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StreetNumber" class="control-label"></label>
+                <input asp-for="StreetNumber" class="form-control" />
+                <span asp-validation-for="StreetNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DateOfBirth" class="control-label"></label>
+                <input type="date" asp-for="DateOfBirth" class="form-control" />
+                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Phone" class="control-label"></label>
+                <input asp-for="Phone" class="form-control" />
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Mobile" class="control-label"></label>
+                <input asp-for="Mobile" class="form-control" />
+                <span asp-validation-for="Mobile" class="text-danger"></span>
+            </div>
+            <hr />
+            <div class="form-group">
+                <label asp-for="PositiveResultDate" class="control-label"></label>
+                <input asp-for="PositiveResultDate" class="form-control" type="date" />
+                <span asp-validation-for="PositiveResultDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NegativeResultDate" class="control-label"></label>
+                <input asp-for="NegativeResultDate" class="form-control" type="date" />
+                <span asp-validation-for="NegativeResultDate" class="text-danger"></span>
+            </div>
+            <hr />
+            <div id="vaccinatedFields" class="border">
+            </div>
+            <br />
+            <button type="button" id="addVaccinatedButton" class="btn btn-primary">הוסף חיסון</button>
+            <br />
+
+            <div class="form-group" >
+                <input style="margin-bottom: 20px;margin-top: 20px;" type="submit" value="הוסף" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">חזרה לרשימה</a>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            var index = 0;
+            $('#addVaccinatedButton').click(function () {
+                if (index < 4) {
+                    var html = '<div class="form-group">';
+                    html+='<br/>';
+                    html += '<label for="Vaccinations_' + index + '__Num">חברה</label>';
+                    html+='<br/>';
+                    html += '<select id="Vaccinations_' + index + '__VaccinationId" name="Vaccinations[' + index + '].VaccinationId" class="select">';
+                    @foreach (var product in Model.AllVaccinations)
+                    {
+                    <text>
+                            html += '<option value="@product.Id">@product.Manufacturer - @product.Id</option>';
+                    </text>
+                    }
+                    html += '</select>';
+                    html+='<br/>';
+                    html += '<label for="Vaccinations_' + index + '__Date">תאריך קבלת חיסון</label>';
+                    html += '<input type="date" id="Vaccinations_' + index + '__Date" name="Vaccinations[' + index + '].VaccinationDate" class="form-control" />';
+                    html += '<br/>';
+                    html += '</div>';
+                    $('#vaccinatedFields').append(html);
+                    index++;
+                }
+            });
+        });
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+}
+
+

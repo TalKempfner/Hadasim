@@ -1,0 +1,11 @@
+﻿
+button {
+    display: inline-block;
+    padding: 45px;
+    background-color: #1a73e8;
+    color: #ffffff;
+    border-radius: 0;
+    -webkit-transition: all .3s;
+    transition: all .3s;
+    border: 1px solid #f26483;
+}
