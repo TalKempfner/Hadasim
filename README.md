@@ -14,7 +14,7 @@ Features:
 
 Installation: 
 
-You need to have asp.net core to run the project.
+You need to have asp.net core 6.0 to run the project.
 
 The databace is on the cloud so no need for local databace.
 
