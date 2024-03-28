@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CoronaManagementSystem.Models;
 using CoronaManagementSystem2.Data;
+using System.Net;
 
 namespace CoronaManagementSystem2.Controllers
 {
@@ -26,6 +27,21 @@ namespace CoronaManagementSystem2.Controllers
                         View(await _context.Member.ToListAsync()) :
                         Problem("Entity set 'CoronaManagementSystem2Context.Member'  is null.");
         }
+        // GET: Members/Search
+        public IActionResult Search(string searchString)
+        {
+            // Retrieve all members from the database
+            var members = _context.Member.ToList();
+
+            // If a search string is provided, filter the members
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                // Filter members whose FirstName or PersonId starts with the search string
+                members = members.Where(m => m.FirstName.StartsWith(searchString) || m.PersonId.StartsWith(searchString)).ToList();
+            }
+            return View("Index", members);
+        }
+
 
         // GET: Members/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -53,6 +69,7 @@ namespace CoronaManagementSystem2.Controllers
             memberDetailsModel.Id=member.PersonId;
             memberDetailsModel.PositiveResultDate= member.CovidResultDates?.PositiveResultDate;
             memberDetailsModel.NegativeResultDate= member.CovidResultDates?.NegativeResultDate;
+            memberDetailsModel.ImageUrl= member.ImageUrl;
             if (member.Vaccinations != null)
             {
                 VaccinatedDetailModel vaccinatedDetailModel = new VaccinatedDetailModel();
@@ -80,7 +97,7 @@ namespace CoronaManagementSystem2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FirstName,LastName,Id,City,StreetName,StreetNumber,DateOfBirth,Phone,Mobile,Vaccinations,NegativeResultDate,PositiveResultDate")] MemberViewModel memberViewModel)
+        public async Task<IActionResult> Create([Bind("FirstName,LastName,Id,City,StreetName,StreetNumber,DateOfBirth,Phone,Mobile,Vaccinations,NegativeResultDate,PositiveResultDate,ImageFile")] MemberViewModel memberViewModel)
         {
             //copy data from MemberViewModel to Member
             Member member = new Member();
@@ -107,6 +124,20 @@ namespace CoronaManagementSystem2.Controllers
                 member.CovidResultDates.PositiveResultDate = memberViewModel.PositiveResultDate.Value;
                 member.CovidResultDates.NegativeResultDate = memberViewModel.NegativeResultDate;
             }
+            //profile image
+            if (memberViewModel.ImageFile != null && memberViewModel.ImageFile.Length > 0)
+            {
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(memberViewModel.ImageFile.FileName);
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "profile", fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await memberViewModel.ImageFile.CopyToAsync(stream);
+                }
+
+                // Save the file path to the database
+                member.ImageUrl = "/images/profile/" + fileName;
+            }
             //add Member
             if (ModelState.IsValid)
             {
@@ -117,7 +148,7 @@ namespace CoronaManagementSystem2.Controllers
             memberViewModel.AllVaccinations= _context.Vaccination?.ToList();
             return View(memberViewModel);
         }
-
+       
         // GET: Members/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -141,7 +172,7 @@ namespace CoronaManagementSystem2.Controllers
             if (member.CovidResultDates!=null)
             {
                 memberEditModel.PositiveResultDate=member.CovidResultDates.PositiveResultDate;
-                memberEditModel.NegativeResultDate=memberEditModel.NegativeResultDate;
+                memberEditModel.NegativeResultDate=member.CovidResultDates.NegativeResultDate;
             }
             memberEditModel.AllVaccinations = _context.Vaccination?.ToList();
             VaccinatedModel vaccinatedModel;
@@ -164,7 +195,7 @@ namespace CoronaManagementSystem2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("FirstName,LastName,Id,PersonId,City,StreetName,StreetNumber,DateOfBirth,Phone,Mobile,Vaccinations,NegativeResultDate,PositiveResultDate")] MemberEditModel memberEditModel)
+        public async Task<IActionResult> Edit(int id, [Bind("FirstName,LastName,Id,PersonId,City,StreetName,StreetNumber,DateOfBirth,Phone,Mobile,Vaccinations,NegativeResultDate,PositiveResultDate,ImageFile")] MemberEditModel memberEditModel)
         {
             if (id != memberEditModel.Id)
             {
@@ -211,6 +242,20 @@ namespace CoronaManagementSystem2.Controllers
             {
                 member.CovidResultDates.PositiveResultDate = memberEditModel.PositiveResultDate.Value;
                 member.CovidResultDates.NegativeResultDate = memberEditModel.NegativeResultDate;
+            }
+            //profile image
+            if (memberEditModel.ImageFile != null && memberEditModel.ImageFile.Length > 0)
+            {
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(memberEditModel.ImageFile.FileName);
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "profile", fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await memberEditModel.ImageFile.CopyToAsync(stream);
+                }
+
+                // Save the file path to the database
+                member.ImageUrl = "/images/profile/" + fileName;
             }
             for (int i=0 ;i<4; i++)
             {

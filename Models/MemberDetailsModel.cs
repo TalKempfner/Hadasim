@@ -46,6 +46,7 @@ namespace CoronaManagementSystem.Models
         [AfterPositiveResult("PositiveResultDate", ErrorMessage = "מועד החלמה חייב להיות אחרי תאריך קבלת תשובה חיובית")]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime? NegativeResultDate { get; set; }
+        public string? ImageUrl { get; set; }
     }
 
     //has VaccinationDescription instead of Vaccination

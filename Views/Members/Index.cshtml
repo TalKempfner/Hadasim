@@ -9,6 +9,16 @@
 <p>
     <a asp-action="Create">הוסף חבר קופת חולים</a>
 </p>
+
+<form asp-action="Search" method="get">
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="חיפוש לפי שם או תעודת זהות" aria-label="Recipient's username" aria-describedby="basic-addon2" name="searchString">
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="submit">חפש</button>
+        </div>
+    </div>
+</form>
+
 <table class="table">
     <thead>
         <tr>

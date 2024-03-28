@@ -4,6 +4,7 @@ using System.Xml.Linq;
 
 namespace CoronaManagementSystem.Models
 {
+    //model for the member edit view. similar to MemberViewModel but with id
     public class MemberEditModel
     {
         public int Id { get; set; }
@@ -48,6 +49,7 @@ namespace CoronaManagementSystem.Models
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime? NegativeResultDate { get; set; }
         public List<VaccinatedModel>? Vaccinations { get; set; } = new List<VaccinatedModel>();
+        public IFormFile? ImageFile { get; set; }
     }
     
 

@@ -1,11 +1,41 @@
 ﻿
-button {
-    display: inline-block;
-    padding: 45px;
-    background-color: #1a73e8;
-    color: #ffffff;
-    border-radius: 0;
-    -webkit-transition: all .3s;
-    transition: all .3s;
-    border: 1px solid #f26483;
+
+
+.member-details {
+    display: flex;
+    flex-wrap: wrap; /* Allow elements to wrap on smaller screens */
 }
+
+.profile-image {
+    border-radius: 50%;
+    width: 150px; /* Adjust as needed */
+    height: 150px;
+    object-fit: cover;
+    object-position: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-right: 20px; /* Add margin for spacing */
+    text-align: center; /* Center text within the image container */
+}
+
+.member-info {
+    flex: 1; /* Take up remaining space */
+}
+
+h1 {
+    margin-top: 0; /* Remove default margin for better layout */
+}
+
+dl {
+    display: flex;
+    flex-wrap: wrap; /* Wrap list items on smaller screens */
+    margin: 0; /* Remove default margin for better layout */
+    padding: 0; /* Remove default padding for better layout */
+}
+
+dt,
+dd {
+    flex: 1; /* Distribute space evenly between labels and values */
+    margin: 5px 0; /* Add spacing between list items */
+}
+
+
