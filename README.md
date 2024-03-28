@@ -33,6 +33,7 @@ Configuration:
    dotnet run
    ```
     then paste the given url into the address bar of your web browser 
+(you may have trouble building the project this way since the two projects are here- if so delete the TwitterTowers folder from the Hadasim folder)
 
 Usage:
 1. Watching all the health insurance members
